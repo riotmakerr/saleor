@@ -1,6 +1,5 @@
 import graphene
 import graphql_jwt
-from graphene_django.debug import DjangoDebug
 from graphene_django.filter import DjangoFilterConnectionField
 
 from ..page import models as page_models
@@ -12,6 +11,7 @@ from .page.mutations import PageCreate, PageDelete, PageUpdate
 from .product.filters import ProductFilterSet
 from .product.mutations import (
     CategoryCreateMutation, CategoryDelete, CategoryUpdateMutation,
+    CollectionCreateMutation,
     ProductCreateMutation, ProductDeleteMutation, ProductUpdateMutation,
     ProductTypeCreateMutation, ProductTypeDeleteMutation,
     ProductTypeUpdateMutation, ProductVariantCreateMutation,
@@ -107,6 +107,8 @@ class Mutations(graphene.ObjectType):
     category_create = CategoryCreateMutation.Field()
     category_delete = CategoryDelete.Field()
     category_update = CategoryUpdateMutation.Field()
+
+    collection_create = CollectionCreateMutation.Field()
 
     page_create = PageCreate.Field()
     page_delete = PageDelete.Field()

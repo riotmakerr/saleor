@@ -18,10 +18,10 @@ from .product.mutations import (
     ProductVariantDeleteMutation, ProductVariantUpdateMutation
 )
 from .product.resolvers import (
-    resolve_attributes, resolve_categories, resolve_products,
-    resolve_product_types)
+    resolve_attributes, resolve_categories, resolve_collections,
+    resolve_products, resolve_product_types)
 from .product.types import (
-    Category, Product, ProductAttribute, ProductType)
+    Category, Collection, Product, ProductAttribute, ProductType)
 from .utils import get_node
 
 
@@ -37,6 +37,11 @@ class Query(graphene.ObjectType):
     category = graphene.Field(
         Category, id=graphene.Argument(graphene.ID),
         description='Lookup a category by ID.')
+    collection = graphene.Field(
+        Collection, id=graphene.Argument(graphene.ID), slug=graphene.String(),
+        description='Lookup a collection by ID.')
+    collections = DjangoFilterConnectionField(
+        Collection, description='List of the shop\'s collections.')
     page = graphene.Field(
         Page, id=graphene.Argument(graphene.ID), slug=graphene.String(),
         description='Lookup a page by ID or by slug.')
@@ -67,6 +72,12 @@ class Query(graphene.ObjectType):
 
     def resolve_categories(self, info, level=None, **kwargs):
         return resolve_categories(info, level)
+
+    def resolve_collection(self, info, id):
+        return get_node(info, id, only_type=Collection)
+
+    def resolve_collections(self, info, **kwargs):
+        resolve_collections(info)
 
     def resolve_page(self, info, id=None, slug=None):
         if slug is not None:
